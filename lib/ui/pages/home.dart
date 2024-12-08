@@ -15,18 +15,19 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // BottomNavigationBar의 현재 인덱스
   final TextEditingController _searchController = TextEditingController();
 
-  // 샘플 BEST 게시글 데이터, 나중에 필요하면 수정.
+  // BEST 게시글 데이터에 이미지 경로 추가
   final List<Map<String, dynamic>> bestPosts = [
     {
-      "title": "BEST 게시글 1",
-      "content": "BEST 게시글 내용입니다.",
-      "author": "작성자1",
-      "likes": 200,
+      "title": "그림 그리는 냥이",
+      "content": "ㅋㅋ 핸드폰 켜줬더니 그림 그리는 것처럼 놀고 있네요.",
+      "author": "이이레",
+      "likes": 150,
       "createdAt": DateTime.now().subtract(const Duration(hours: 1)),
+      "imagePath": 'assets/images/A.png.png', // 수정된 이미지 경로
     },
   ];
 
-  // 샘플 일반 게시글 데이터
+  // 일반 게시글 데이터
   final List<Map<String, dynamic>> normalPosts = [
     {
       "title": "게시글 제목 2",
@@ -34,13 +35,6 @@ class _HomePageState extends State<HomePage> {
       "author": "익명",
       "likes": 120,
       "createdAt": DateTime.now().subtract(const Duration(hours: 3)),
-    },
-    {
-      "title": "게시글 제목 3",
-      "content": "게시글 내용 3입니다.",
-      "author": "작성자2",
-      "likes": 95,
-      "createdAt": DateTime.now().subtract(const Duration(days: 1)),
     },
   ];
 
@@ -71,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = index;
           });
 
-           if (index == 3) {
+          if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -82,12 +76,10 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    const Profile(), // MY 버튼을 눌렀을 때 Profile 페이지로 이동
+                builder: (context) => const Profile(),
               ),
             );
           }
-
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
@@ -104,12 +96,6 @@ class _HomePageState extends State<HomePage> {
     switch (_currentIndex) {
       case 0:
         return _buildHomePage();
-      case 1:
-        return _buildSearchPage();
-      case 2:
-        return const Center(child: Text('내 주변 페이지'));
-      case 3:
-        return const Center(child: Text('커뮤니티 페이지'));
       default:
         return const Center(child: Text('페이지 없음'));
     }
@@ -120,22 +106,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '검색',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              onSubmitted: (query) {
-                print('검색어: $query');
-              },
-            ),
-          ),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -144,7 +114,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SizedBox(
-            height: 200,
+            height: 250,
             child: PageView.builder(
               itemCount: bestPosts.length,
               itemBuilder: (context, index) {
@@ -153,17 +123,32 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PostDetailPage(post: bestPosts[index]), //여기 코드가 게시글 누르면 상세 페이지로 넘어가게 하느 코드
+                        builder: (context) =>
+                            PostDetailPage(post: bestPosts[index]),
                       ),
                     );
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Text(
-                        bestPosts[index]['title'],
-                        style: const TextStyle(fontSize: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(12.0),
+                      image: DecorationImage(
+                        image:
+                            AssetImage(bestPosts[index]['imagePath']), // 이미지 추가
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        color: Colors.black.withOpacity(0.5),
+                        child: Text(
+                          bestPosts[index]['title'],
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
                       ),
                     ),
                   ),
@@ -189,12 +174,14 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PostDetailPage(post: normalPosts[index]),  //여기는 일반 게시글 누르면 넘어가게끔 하느 ㄴ코드
+                      builder: (context) =>
+                          PostDetailPage(post: normalPosts[index]),
                     ),
                   );
                 },
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
@@ -209,40 +196,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  Widget _buildSearchPage() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: '검색어를 입력하세요',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
-            onSubmitted: (query) {
-              print('검색어: $query');
-            },
-          ),
-        ),
-        Expanded(
-          child: Center(
-            child: Text(
-              '검색 결과를 여기에 표시합니다.\n검색어: ${_searchController.text}',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
-class PostDetailPage extends StatelessWidget {    //여기도 페이지 누르면 글 내용이랑 좋아요 나오게 한 코드
+class PostDetailPage extends StatelessWidget {
   final Map<String, dynamic> post;
 
   const PostDetailPage({Key? key, required this.post}) : super(key: key);
@@ -258,6 +214,9 @@ class PostDetailPage extends StatelessWidget {    //여기도 페이지 누르�
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (post['imagePath'] != null) // 이미지가 있을 경우 표시
+              Image.asset(post['imagePath']),
+            const SizedBox(height: 16),
             Text(
               post['content'],
               style: const TextStyle(fontSize: 16),
