@@ -19,7 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView( // 스크롤 가능하도록 추가
+      body: SingleChildScrollView(
+        // 스크롤 가능하도록 추가
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -132,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 200),
+                const SizedBox(height: 50), // 상단과 구분을 위해 여백 추가
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -144,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: const Text(
                     '회원가입',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ),
               ],
