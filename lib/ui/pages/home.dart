@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profile.dart'; // Profile 페이지 import
+import 'community_page.dart';
 
 class HomePage extends StatefulWidget {
   final String token;
@@ -70,14 +71,23 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = index;
           });
 
-          if (index == 4) {
+           if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Profile(token: widget.token),
+                builder: (context) => CommunityPage(),
+              ),
+            );
+          } else if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const Profile(), // MY 버튼을 눌렀을 때 Profile 페이지로 이동
               ),
             );
           }
+
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
